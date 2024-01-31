@@ -40,21 +40,23 @@ async function onFormSubmit(event) {
 
     try {
         const data = await search(searchQuery, page);
-            if (data.hits.length === 0) {
-                return iziToast.error({
-                    position: 'topRight',
-                    title: 'Error',
-                    message: 'Sorry, there are no images matching your search query. Please try again!',
-                })
-            } else {
-                const mark = markup(data.hits);
-                refs.gallery.insertAdjacentHTML('beforeend', mark);
-                gallery.refresh();
+        if (data.hits.length === 0) {
+            refs.loader.classList.add('is-hidden');
+            refs.form.reset();
+            return iziToast.error({
+                position: 'topRight',
+                title: 'Error',
+                message: 'Sorry, there are no images matching your search query. Please try again!',
+            })
+        } else {
+            const mark = markup(data.hits);
+            refs.gallery.insertAdjacentHTML('beforeend', mark);
+            gallery.refresh();
 
-                maxPage = Math.ceil(data.totalHits / 40);
-                if (page < maxPage) {
-                    refs.loadMore.classList.remove('is-hidden');
-                }}
+            maxPage = Math.ceil(data.totalHits / 40);
+            if (page < maxPage) {
+                refs.loadMore.classList.remove('is-hidden');
+            }}
     } catch(error) {
             console.log(error)
 		    iziToast.error({
@@ -112,6 +114,3 @@ function markup(arr) {
    
 }
 
-function closeBtnLoadMore() {
-    
-}
